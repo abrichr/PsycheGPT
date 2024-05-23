@@ -1,0 +1,64 @@
+{
+  "Perception": {
+    "function": "Processes and interprets sensory data from the environment.",
+    "inputs": ["Sensory Systems"],
+    "outputs": ["Memory", "Attention", "Emotion"],
+    "components": [
+      {"name": "Visual Processing", "function": "Processes and interprets visual stimuli."},
+      {"name": "Auditory Processing", "function": "Processes and interprets auditory stimuli."},
+      {"name": "Olfactory Processing", "function": "Processes and interprets olfactory stimuli."}
+    ]
+  },
+  "Memory": {
+    "function": "Stores, retrieves, and encodes information for future use.",
+    "inputs": ["Perception", "Attention", "Emotion"],
+    "outputs": ["Decision Making", "Learning"],
+    "components": [
+      {"name": "Short-term Memory", "function": "Holds information temporarily for processing and manipulation."},
+      {"name": "Long-term Memory", "function": "Stores information over extended periods, potentially indefinitely."},
+      {"name": "Working Memory", "function": "A system for temporarily storing and managing the information required to carry out complex cognitive tasks such as learning, reasoning, and comprehension."}
+    ]
+  },
+  "Attention": {
+    "function": "Allocates cognitive resources to relevant stimuli, controlling the focus of processing.",
+    "inputs": ["Perception"],
+    "outputs": ["Memory", "Decision Making"],
+    "components": []
+  },
+  "Emotion": {
+    "function": "Processes and regulates affective states that influence cognition and behavior.",
+    "inputs": ["Perception", "Memory"],
+    "outputs": ["Decision Making", "Social Cognition"],
+    "components": []
+  },
+  "Decision Making": {
+    "function": "Integrates information to make choices or solve problems.",
+    "inputs": ["Memory", "Attention", "Emotion"],
+    "outputs": ["Executive Functions"],
+    "components": []
+  },
+  "Learning": {
+    "function": "Acquires new information or modifies existing knowledge, skills, and behaviors.",
+    "inputs": ["Memory", "Decision Making"],
+    "outputs": ["Memory", "Behavior"],
+    "components": []
+  },
+  "Executive Functions": {
+    "function": "Oversees and regulates cognitive processes, including planning, inhibition, and cognitive flexibility.",
+    "inputs": ["Decision Making"],
+    "outputs": ["Behavior", "Social Cognition"],
+    "components": []
+  },
+  "Social Cognition": {
+    "function": "Processes, stores, and applies information about other people and social situations.",
+    "inputs": ["Emotion", "Executive Functions"],
+    "outputs": ["Behavior", "Emotion"],
+    "components": []
+  },
+  "Behavior": {
+    "function": "Encompasses all outward actions and reactions of an individual, observable by an external party.",
+    "inputs": ["Learning", "Executive Functions", "Social Cognition"],
+    "outputs": [],
+    "components": []
+  }
+}
