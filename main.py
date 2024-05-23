@@ -1,9 +1,13 @@
 import io
 import json
 
+from loguru import logger
 from PIL import Image
 import networkx as nx
+import openai
 import pygraphviz as pgv
+
+from config import settings
 
 
 class PsychologicalModule:
@@ -12,6 +16,11 @@ class PsychologicalModule:
         self.function = function
         self.inputs = []
         self.outputs = []
+        # Define a base prompt that describes the simulation context
+        self.base_prompt = (
+            f"This is a simulation of a psychological module called '{name}'. "
+            f"Its main function is to {function}."
+        )
 
     def add_input(self, module: 'PsychologicalModule'):
         self.inputs.append(module)
@@ -20,12 +29,31 @@ class PsychologicalModule:
         self.outputs.append(module)
 
     def process_information(self):
-        print(f"Processing in {self.name}")
+        logger.info(f"Processing in {self.name}")
+        prompt = f"{self.base_prompt} How would this module process information given its function?"
+        response = self.prompt_llm(prompt)
+        logger.info(f"{self.name} processes: {response}")
         for output in self.outputs:
-            output.receive_information(self)
+            output.receive_information(self, response)
 
-    def receive_information(self, input_module: 'PsychologicalModule'):
-        print(f"{self.name} received information from {input_module.name}")
+    def receive_information(self, input_module: 'PsychologicalModule', information):
+        prompt = f"{self.base_prompt} It has received information from {input_module.name}, which says '{information}'. How should it integrate this information?"
+        response = self.prompt_llm(prompt)
+        logger.info(f"{self.name} integrates: {response}")
+
+    def prompt_llm(self, prompt: str) -> str:
+        """Send a prompt to OpenAI's LLM and receive a response."""
+        try:
+            response = openai.Completion.create(
+                engine="gpt-4",  # Updated to a more advanced model
+                prompt=prompt,
+                max_tokens=150,
+                api_key=settings.openai_api_key
+            )
+            return response.choices[0].text.strip()
+        except Exception as e:
+            logger.error(f"An error occurred while querying OpenAI: {e}")
+            return "Error in processing LLM response."
 
 
 class System:
