@@ -2,12 +2,17 @@ import io
 import json
 
 from loguru import logger
+from openai import OpenAI
 from PIL import Image
 import networkx as nx
-import openai
 import pygraphviz as pgv
 
 from config import settings
+
+
+client = OpenAI(
+    api_key=settings.openai_api_key,
+)
 
 
 class PsychologicalModule:
@@ -16,7 +21,7 @@ class PsychologicalModule:
         self.function = function
         self.inputs = []
         self.outputs = []
-        # Define a base prompt that describes the simulation context
+        self.system_prompt = "You are simulating a human mind."
         self.base_prompt = (
             f"This is a simulation of a psychological module called '{name}'. "
             f"Its main function is to {function}."
@@ -40,20 +45,27 @@ class PsychologicalModule:
         prompt = f"{self.base_prompt} It has received information from {input_module.name}, which says '{information}'. How should it integrate this information?"
         response = self.prompt_llm(prompt)
         logger.info(f"{self.name} integrates: {response}")
+        return response
 
     def prompt_llm(self, prompt: str) -> str:
         """Send a prompt to OpenAI's LLM and receive a response."""
-        try:
-            response = openai.Completion.create(
-                engine="gpt-4",  # Updated to a more advanced model
-                prompt=prompt,
-                max_tokens=150,
-                api_key=settings.openai_api_key
-            )
-            return response.choices[0].text.strip()
-        except Exception as e:
-            logger.error(f"An error occurred while querying OpenAI: {e}")
-            return "Error in processing LLM response."
+        response = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": self.system_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": "prompt",
+                }
+            ],
+            model="gpt-4",
+        )
+        result = response.choices[0].message.content.strip()
+        logger.info(f"{result=}")
+        import ipdb; ipdb.set_trace()
+        return result
 
 
 class System:

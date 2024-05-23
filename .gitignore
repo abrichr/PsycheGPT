@@ -1,3 +1,4 @@
 env
 .env
 *.sw[m-p]
+__pycache__
